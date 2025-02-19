@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTremio Configuration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --error-color: #E74C3C;
+            --dark-color: #2C3E50;
+            --light-color: #ECF0F1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .warning {
+            background: #FFF5E6;
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--warning-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--dark-color);
+        }
+
+        .form-group {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95A5A6;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .button:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #F8FAFC;
+            border-radius: 12px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .url-container {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .url-display {
+            background: white;
+            padding: 12px 45px 12px 12px;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .url-display:hover {
+            background-color: #f8f9fa;
+        }
+
+        .copy-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--success-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button.stremio-button {
+            background: #8E44AD;
+        }
+
+        .button.stremio-button:hover {
+            background: #703688;
+        }
+
+        #configUrl {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+            margin: 10px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .copy-button {
+            background: var(--success-color);
+            margin-top: 1rem;
+        }
+
+        .copy-button:hover {
+            background: #219653;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 8px;
+            color: var(--primary-color);
+            cursor: help;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .test-button {
+            background: var(--warning-color);
+            margin-bottom: 1rem;
+        }
+
+        .test-button:hover {
+            background: #E67E22;
+        }
+
+        .test-result {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .test-success {
+            background: #D5F5E3;
+            color: #27AE60;
+            border: 1px solid #27AE60;
+        }
+
+        .test-error {
+            background: #FADBD8;
+            color: #E74C3C;
+            border: 1px solid #E74C3C;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IPTremio Configuration</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Legal Notice:</strong> This addon is for use with legal Xtream Codes playlists only.
+            You are responsible for ensuring you have the right to access the content.
+        </div>
+
+        <div class="form-group">
+            <label for="host">Host <i class="fas fa-question-circle tooltip">
+                <span class="tooltip-text">Enter your provider's domain name or IP address, without "http://" or port number</span>
+            </i></label>
+            <div class="input-group">
+                <i class="fas fa-server"></i>
+                <input type="text" id="host" placeholder="example.com or 123.123.123.123" oninput="validateHost(this)">
+            </div>
+            <div class="input-hint">Example: xtream.server.com or 192.168.1.1</div>
+            <div class="error-message" id="host-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="port">Port <i class="fas fa-question-circle tooltip">
+                <span class="tooltip-text">The port number provided by your service. Usually 80 if not specified</span>
+            </i></label>
+            <div class="input-group">
+                <i class="fas fa-network-wired"></i>
+                <input type="text" id="port" placeholder="80" oninput="validatePort(this)" value="80">
+            </div>
+            <div class="input-hint">Default is 80 if you're not sure</div>
+            <div class="error-message" id="port-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" required>
+            </div>
+        </div>
+
+        <div id="testResult" class="test-result"></div>
+        <button class="button test-button" onclick="testConnection()">
+            <i class="fas fa-vial"></i>
+            Test Connection
+        </button>
+
+        <button class="button" onclick="saveConfig()">
+            <i class="fas fa-cog"></i>
+            Generate Stremio URL
+        </button>
+
+        <div id="result" class="result">
+            <h3><i class="fas fa-check-circle"></i> Configuration Generated</h3>
+            <div class="url-container">
+                <div id="configUrl" class="url-display" onclick="copyToClipboard()"></div>
+                <span class="copy-indicator">Copied!</span>
+            </div>
+            <div class="buttons-container">
+                <button class="button copy-button" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i>
+                    Copy URL
+                </button>
+                <button class="button stremio-button" onclick="openInStremio()">
+                    <i class="fas fa-external-link-alt"></i>
+                    Open in Stremio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function saveConfig() {
+            if (!validateHost(document.getElementById('host')) || 
+                !validatePort(document.getElementById('port'))) {
+                alert('Please correct the errors before continuing');
+                return;
+            }
+
+            const button = document.querySelector('.button');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            button.disabled = true;
+
+            let host = document.getElementById('host').value;
+            host = host.replace(/^https?:\/\//i, '');
+            host = host.split('/')[0];
+
+            const config = {
+                host: host,
+                port: document.getElementById('port').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            if (!config.host || !config.port || !config.username || !config.password) {
+                alert('Please fill all fields');
+                button.innerHTML = originalContent;
+                button.disabled = false;
+                return;
+            }
+
+            try {
+                const response = await fetch('/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Configuration failed');
+                }
+
+                document.getElementById('configUrl').textContent = data.configUrl;
+                document.getElementById('result').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating configuration: ' + error.message);
+            } finally {
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            }
+        }
+
+        async function copyToClipboard() {
+            const url = document.getElementById('configUrl').textContent;
+            const copyIndicator = document.querySelector('.copy-indicator');
+            
+            try {
+                await navigator.clipboard.writeText(url);
+                copyIndicator.style.opacity = '1';
+                setTimeout(() => {
+                    copyIndicator.style.opacity = '0';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy URL');
+            }
+        }
+
+        function openInStremio() {
+            const url = document.getElementById('configUrl').textContent;
+            const stremioUrl = url.replace(/^https?:/, 'stremio:');
+            window.open(stremioUrl, '_blank');
+        }
+
+        function validateHost(input) {
+            const hostError = document.getElementById('host-error');
+            const value = input.value.trim();
+            
+            if (value.includes('http://') || value.includes('https://')) {
+                hostError.textContent = 'Please remove "http://" or "https://" from the host';
+                hostError.style.display = 'block';
+                return false;
+            }
+            
+            if (value.includes(':')) {
+                hostError.textContent = 'Please enter the port number in the port field below';
+                hostError.style.display = 'block';
+                return false;
+            }
+            
+            hostError.style.display = 'none';
+            return true;
+        }
+
+        function validatePort(input) {
+            const portError = document.getElementById('port-error');
+            const value = input.value.trim();
+            
+            if (value.includes('http') || value.includes('://')) {
+                portError.textContent = 'Please enter only the port number (e.g., 80)';
+                portError.style.display = 'block';
+                input.value = '80';
+                return false;
+            }
+            
+            const port = parseInt(value);
+            if (value && (isNaN(port) || port <= 0 || port > 65535)) {
+                portError.textContent = 'Port must be a number between 1 and 65535';
+                portError.style.display = 'block';
+                return false;
+            }
+            
+            portError.style.display = 'none';
+            return true;
+        }
+
+        async function testConnection() {
+            const testButton = document.querySelector('.test-button');
+            const testResult = document.getElementById('testResult');
+            const originalContent = testButton.innerHTML;
+            
+            testButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+            testButton.disabled = true;
+            testResult.style.display = 'none';
+
+            let host = document.getElementById('host').value;
+            host = host.replace(/^https?:\/\//i, '');
+            host = host.split('/')[0];
+
+            const config = {
+                host: host,
+                port: document.getElementById('port').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            if (!config.host || !config.port || !config.username || !config.password) {
+                testResult.className = 'test-result test-error';
+                testResult.textContent = 'Please fill all fields';
+                testResult.style.display = 'block';
+                testButton.innerHTML = originalContent;
+                testButton.disabled = false;
+                return;
+            }
+
+            try {
+                const response = await fetch('/test-connection', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                
+                const data = await response.json();
+                
+                testResult.className = `test-result ${response.ok ? 'test-success' : 'test-error'}`;
+                testResult.textContent = response.ok ? '✓ Connection successful!' : `✗ ${data.error}`;
+                testResult.style.display = 'block';
+            } catch (error) {
+                testResult.className = 'test-result test-error';
+                testResult.textContent = '✗ Connection failed. Please check your information.';
+                testResult.style.display = 'block';
+            } finally {
+                testButton.innerHTML = originalContent;
+                testButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
