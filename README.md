@@ -2,6 +2,8 @@
 
 ⚠️ **EXPERIMENTAL PROJECT** - This project is currently in experimental phase. Use it at your own risk.
 
+⚠️ **Legal Notice** This addon is for use with legal Xtream Codes playlists only. You are responsible for ensuring you have the right to access the content.
+
 IPTremio is a Stremio addon for Xtream Codes playlists integration. It allows you to stream your IPTV content directly through Stremio.
 
 Hosted on: [https://iptremio.click/configure](https://iptremio.click/configure)
