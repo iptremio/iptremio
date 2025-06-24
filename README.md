@@ -6,7 +6,7 @@
 
 IPTremio is a Stremio addon for Xtream Codes playlists integration. It allows you to stream your IPTV content directly through Stremio.
 
-Hosted on: [https://iptremio.click/configure](https://iptremio.click/configure)
+Hosted on: [https://iptremio.click/configuration](https://iptremio.click/configuration)
 
 ## Features
 
